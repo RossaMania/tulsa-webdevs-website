@@ -4,23 +4,26 @@ import Layout from '../layouts/Layout.astro';
 if (Astro.request.method === 'POST') {
   try {
     const data = await Astro.request.formData();
-    const name = data.get('name');
-    const email = data.get('email');
-    const topic = data.get('topic');
-    const summary = data.get('summary');
+    const name: FormDataEntryValue | null = data.get('name');
+    const email: FormDataEntryValue | null = data.get('email');
+    const topic: FormDataEntryValue | null = data.get('topic');
+    const summary: FormDataEntryValue | null = data.get('summary');
 
     // Check if name has at least 6 characters
-    if (name && name.length < 6) {
+    if (name && name.toString().length < 6) {
       throw new Error('Name must be at least 6 characters long');
     }
 
     // Check if email is valid (you can add more complex validation)
-    if (email && !isValidEmail(email)) {
+    if (email && !isValidEmail(email.toString())) {
       throw new Error('Invalid email address');
     }
 
     // Check if topic and summary have at least 6 characters
-    if ((topic && topic.length < 6) || (summary && summary.length < 6)) {
+    if (
+      (topic && topic.toString().length < 6) ||
+      (summary && summary.toString().length < 6)
+    ) {
       throw new Error('Topic and summary must be at least 6 characters long');
     }
 
@@ -49,33 +52,33 @@ function isValidEmail(email: string | null): boolean {
 }
 ---
 
-<Layout>
+<Layout title="Proposal">
   <main>
     <h1>Propose an idea!</h1>
     <h2 class="text-2xl">Have an idea?! Submit it!</h2>
     <h3 class="text-xl">Fill out the form below!</h3>
     <form method="POST">
-      <label htmlFor="name" class="text-l font-semibold"></label>
+      <label class="text-l font-semibold"></label>
       Name:
-      <input type="text" name="name" required minLength={6} />
-      <label htmlFor="email" class="text-l font-semibold"></label>
+      <input type="text" name="name" required minlength={6} />
+      <label class="text-l font-semibold"></label>
       Email:
       <input type="email" name="email" />
-      <label htmlFor="topic" class="text-l font-semibold"> Topic: </label>
+      <label class="text-l font-semibold"> Topic: </label>
       <textarea
         id="topic"
         name="topic"
         required
-        minLength={6}
+        minlength={6}
         class="rounded-sm w-full"></textarea>
-      <label htmlFor="summary" class="text-l font-semibold">
+      <label class="text-l font-semibold">
         Summary:{' '}
       </label>
       <textarea
         id="summary"
         name="summary"
         required
-        minLength={6}
+        minlength={6}
         rows={5}
         class="rounded-sm w-full"></textarea>
       <div
@@ -87,19 +90,19 @@ function isValidEmail(email: string | null): boolean {
           name="proposal-type"
           value="project"
         />
-        <label htmlFor="project" class="text-l font-semibold">
+        <label class="text-l font-semibold">
           {' '}
           Project!{' '}
         </label>
         <br />
         <input type="checkbox" id="talk" name="proposal-type" value="talk" />
-        <label htmlFor="talk" class="text-l font-semibold">
+        <label class="text-l font-semibold">
           {' '}
           Talk!{' '}
         </label>
         <br />
         <input type="checkbox" id="lab" name="proposal-type" value="lab" />
-        <label htmlFor="lab" class="text-l font-semibold">
+        <label class="text-l font-semibold">
           {' '}
           Lab!
         </label>
